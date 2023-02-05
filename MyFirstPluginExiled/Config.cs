@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -49,35 +49,33 @@ namespace CoinFlip
         public IDictionary<ItemType, int> coinflip_items { get; set; } = new Dictionary<ItemType, int>() // ITEM CHANCES
         {
     
-      
-
             // GUNS
             [ItemType.GunAK] = 3,
-            [ItemType.GunCOM15] = 10,
-            [ItemType.GunCOM18] = 20,
-            [ItemType.GunCom45] = 20,
+            [ItemType.GunCOM15] = 8,
+            [ItemType.GunCOM18] = 9,
             [ItemType.GunCrossvec] = 5,
-            [ItemType.GunFSP9] = 20,
+            [ItemType.GunFSP9] = 6,
             [ItemType.GunLogicer] = 4,
             [ItemType.GunRevolver] = 4,
             [ItemType.GunShotgun] = 4,
-            [ItemType.GunE11SR] = 3,
+            [ItemType.GunE11SR] = 4,
             
             // GRENADES
             [ItemType.GrenadeFlash] = 5,
-            [ItemType.GrenadeHE] = 5,
+            [ItemType.GrenadeHE] = 3,
 
             // Misc
             [ItemType.Coin] = 0,
-            [ItemType.Jailbird] = 0,
+            [ItemType.Jailbird] = 3,
             [ItemType.ParticleDisruptor] = 0,
-            [ItemType.MicroHID] = 0,
-            [ItemType.Radio] = 15,
-            [ItemType.Flashlight] = 20,
-            
+            [ItemType.MicroHID] = 2,
+            [ItemType.Radio] = 10,
+            [ItemType.Flashlight] = 10,
+            [ItemType.GunCom45] = 0,
+
             // Medical
-            [ItemType.Painkillers] = 25,
-            [ItemType.Medkit] = 15,
+            [ItemType.Painkillers] = 10,
+            [ItemType.Medkit] = 8,
             [ItemType.SCP500] = 0,
 
             //  SCP
@@ -89,21 +87,21 @@ namespace CoinFlip
 
             [ItemType.ArmorCombat] = 10,
             [ItemType.ArmorHeavy] = 5,
-            [ItemType.ArmorLight] = 15,
+            [ItemType.ArmorLight] = 14,
 
             // KEYCARDS
             [ItemType.KeycardO5] = 2,
-            [ItemType.KeycardChaosInsurgency] = 5,
+            [ItemType.KeycardChaosInsurgency] = 3,
             [ItemType.KeycardResearchCoordinator] = 5,
-            [ItemType.KeycardNTFCommander] = 4,
+            [ItemType.KeycardNTFCommander] = 3,
             [ItemType.KeycardNTFLieutenant] = 4,
             [ItemType.KeycardNTFOfficer] = 4,
-            [ItemType.KeycardFacilityManager] = 4,
-            [ItemType.KeycardResearchCoordinator] = 4,
-            [ItemType.KeycardZoneManager] = 4,
-            [ItemType.KeycardGuard] = 11,
-            [ItemType.KeycardScientist] = 25,
-            [ItemType.KeycardJanitor] = 25,
+            [ItemType.KeycardFacilityManager] = 5,
+            [ItemType.KeycardResearchCoordinator] = 6,
+            [ItemType.KeycardZoneManager] = 6,
+            [ItemType.KeycardGuard] = 10,
+            [ItemType.KeycardScientist] = 12,
+            [ItemType.KeycardJanitor] = 13,
 
         };
         ////////////////////////////////////////
