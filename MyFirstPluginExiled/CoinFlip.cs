@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +14,7 @@ namespace CoinFlip
 {
     public class CoinFlip : Plugin<Config>
     {
-        public override string Name => "My first Plugin";
+        public override string Name => "CoinFlip";
         public override string Author => "Morgana";
         public override Version RequiredExiledVersion { get; } = new Version(6, 0, 0);
         public override Version Version => new Version(1, 0, 0);
