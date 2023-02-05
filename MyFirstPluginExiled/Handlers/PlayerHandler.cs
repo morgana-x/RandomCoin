@@ -1,161 +1,152 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Exiled.API.Enums;
+using System.ComponentModel;
+using Exiled.API.Interfaces;
 using Exiled.API.Features;
-using Exiled.Events.EventArgs;
-using Exiled.Events.EventArgs.Player;
-namespace CoinFlip.Handlers
+using Exiled.API.Enums;
+using System.Collections.Specialized;
+namespace CoinFlip
 {
-
-     class PlayerHandler
+    public class Config : IConfig
     {
-        Random rnd = new Random();
+        public bool IsEnabled { get; set; } = true;
+        public bool Debug { get; set; } = true;
 
-        public ItemType GetRandomItem(IDictionary<ItemType, int> dict)
+
+        ////////////// COIN FLIP CONFIG////////////////////////////////
+        
+        /// LOGS
+        [Description("Prefix of coinflip logs")]
+        public string coinflip_prefix { get; set; } = "[Random Coin] ";
+
+        // MAIN
+
+        [Description("Whether to notify the player when they get an effect/item")]
+        public bool coinflip_notifyplayer { get; set; } = true;
+
+        [Description("Whether the coin gets destroyed when it's used.")]
+        public bool coinflip_destroycoin { get; set; } = true;
+
+
+        [Description("Amount of time an effect stays")]
+        public float coinflip_effect_time { get; set; } = 120.0f;
+
+        /// ////////////////////////////////////
+        [Description("Decide whether it's an effect or item by checking if it's heads or tails instead, will make item chance and effect chance redundant")]
+        public bool coinflip_headstails { get; set; } = true;
+
+        [Description("Chance of coinflip giving an item")]
+        public int coinflip_item_chance { get; set; } = 50; // ITEM CHANCE
+
+
+        [Description("Chance of coinflip giving an effect")]
+        public int coinflip_effect_chance { get; set; } = 50; // EFFECT CHANCE
+        /// ////////////////////////////////////
+        /// 
+        /// ////////////////////////////////////
+
+        [Description("Chances of items when a coinflip gives an item")]
+        public IDictionary<ItemType, int> coinflip_items { get; set; } = new Dictionary<ItemType, int>() // ITEM CHANCES
         {
-            ItemType result = ItemType.None;
-            int totalWeight = 0;
-
-            foreach (var Item in dict)
-                totalWeight += Item.Value;
-
-            int randNumber = rnd.Next(0,totalWeight);
-
-            foreach (var Item in dict)
-            {
-                var value = Item.Value;
-
-                if (randNumber >= value)
-                {
-                    randNumber -= value;
-                }
-                else
-                {
-                    result = Item.Key;
-                    break;
-                }
-            }
-            return result;
-        }
-
-        public EffectType GetRandomEffect(IDictionary<EffectType, int> dict)
-        {
-            EffectType result = EffectType.Scp207;
-            int totalWeight = 0;
-
-            foreach (var Item in dict)
-                totalWeight += Item.Value;
-
-            int randNumber = rnd.Next(0, totalWeight);
-
-            foreach (var Item in dict)
-            {
-                var value = Item.Value;
-
-                if (randNumber >= value)
-                {
-                    randNumber -= value;
-                }
-                else
-                {
-                    result = Item.Key;
-                    break;
-                }
-            }
-            return result;
-        }
-        public void OnJoined(JoinedEventArgs ev)
-        {
-        }
-
-        public void OnLeft(LeftEventArgs ev)
-        {
-            
-        }
-
-        public void OnPlayerDied( Exiled.Events.EventArgs.Player.DiedEventArgs  ev)
-        {
-           
-        }
-        public void OnPlayerSpawned(Exiled.Events.EventArgs.Player.SpawnedEventArgs ev)
-        {
-  
-        }
-        public void OnPlayerFlipCoin(FlippingCoinEventArgs ev)
-        {
-            string prefix = CoinFlip.Instance.Config.coinflip_prefix;
-             IDictionary<ItemType, int> coinflip_items = CoinFlip.Instance.Config.coinflip_items;
-            IDictionary<EffectType, int> coinflip_effects= CoinFlip.Instance.Config.coinflip_effects;
-
-            int coinflip_item_chance = CoinFlip.Instance.Config.coinflip_item_chance;
-            int coinflip_effect_chance = CoinFlip.Instance.Config.coinflip_effect_chance;
-
-            float coinflip_effect_time = CoinFlip.Instance.Config.coinflip_effect_time;
-            bool coinflip_destroycoinonuse = CoinFlip.Instance.Config.coinflip_destroycoin;
-
-            bool coinflip_notify = CoinFlip.Instance.Config.coinflip_notifyplayer;
-
-            Log.Info(prefix + ev.Player.Nickname + " flipped a coin!");
-            int random = rnd.Next(0, 100);
-            Log.Info(prefix + ev.Player.Nickname + " luck: " + random.ToString() );
-            if (coinflip_destroycoinonuse)
-            {
-                Log.Info(prefix +  "Destroyed " + ev.Player.Nickname + "'s coin.");
-                ev.Player.RemoveHeldItem(true);
-            }
-            int choose = 0;
-            if (coinflip_item_chance <= coinflip_effect_chance) 
-            {
-                if (random > coinflip_effect_chance)
-                    choose = 1; // item
-                else
-                    choose = 0; // effect
-            }
-            else if (coinflip_item_chance >= coinflip_effect_chance)
-            {
-                if (random > coinflip_item_chance)
-                    choose = 0; // effect
-                else
-                    choose = 1; // item
-            }
-
-            switch(choose)
-            {
-                case 0: // effects
-             
-                    EffectType effect = GetRandomEffect(coinflip_effects);
-                    string effectName = effect.ToString();
-                    Log.Info(prefix + ev.Player.Nickname + " got a random effect! Effect: " + effectName + " Duration: " + coinflip_effect_time.ToString());
-                    ev.Player.EnableEffect(effect, coinflip_effect_time);
-                    if (coinflip_notify)
-                    {
-                        ev.Player.Broadcast(6, "Given " + effectName + " effect for " + coinflip_effect_time.ToString() + " seconds!", Broadcast.BroadcastFlags.Normal, true);
-                    }
-                    break;
-                case 1: // items
-       
-                    ItemType item = GetRandomItem(coinflip_items);
-                    string itemName = item.ToString();
-                    Log.Info(prefix + ev.Player.Nickname + " got a random item! Item: " + itemName);
-                    ev.Player.AddItem(item);
-                    if (coinflip_notify)
-                    {
-                        ev.Player.Broadcast(5, "You have been given " + itemName + "!", Broadcast.BroadcastFlags.Normal, true);
-                    }
-                    break;
-            }
-
-            
     
-
-        }
-        public void OnInteractingDoor(InteractingDoorEventArgs ev)
-        {
+            // GUNS
+            [ItemType.GunAK] = 3,
+            [ItemType.GunCOM15] = 8,
+            [ItemType.GunCOM18] = 9,
+            [ItemType.GunCrossvec] = 5,
+            [ItemType.GunFSP9] = 6,
+            [ItemType.GunLogicer] = 4,
+            [ItemType.GunRevolver] = 4,
+            [ItemType.GunShotgun] = 4,
+            [ItemType.GunE11SR] = 4,
             
-        }
-    }
+            // GRENADES
+            [ItemType.GrenadeFlash] = 5,
+            [ItemType.GrenadeHE] = 3,
 
+            // Misc
+            [ItemType.Coin] = 0,
+            [ItemType.Jailbird] = 3,
+            [ItemType.ParticleDisruptor] = 0,
+            [ItemType.MicroHID] = 2,
+            [ItemType.Radio] = 10,
+            [ItemType.Flashlight] = 10,
+            [ItemType.GunCom45] = 0,
+
+            // Medical
+            [ItemType.Painkillers] = 10,
+            [ItemType.Medkit] = 8,
+            [ItemType.SCP500] = 0,
+
+            //  SCP
+            [ItemType.SCP207] = 1,
+            [ItemType.SCP018] = 0,
+            [ItemType.SCP2176] = 0,
+
+            // Armor
+
+            [ItemType.ArmorCombat] = 10,
+            [ItemType.ArmorHeavy] = 5,
+            [ItemType.ArmorLight] = 14,
+
+            // KEYCARDS
+            [ItemType.KeycardO5] = 2,
+            [ItemType.KeycardChaosInsurgency] = 3,
+            [ItemType.KeycardResearchCoordinator] = 5,
+            [ItemType.KeycardNTFCommander] = 3,
+            [ItemType.KeycardNTFLieutenant] = 4,
+            [ItemType.KeycardNTFOfficer] = 4,
+            [ItemType.KeycardFacilityManager] = 5,
+            [ItemType.KeycardResearchCoordinator] = 6,
+            [ItemType.KeycardZoneManager] = 6,
+            [ItemType.KeycardGuard] = 10,
+            [ItemType.KeycardScientist] = 12,
+            [ItemType.KeycardJanitor] = 13,
+
+        };
+        ////////////////////////////////////////
+        
+
+        ////////////EFFECTS/////////////////////
+
+
+
+
+        [Description("Chances of effects when a coinflip gives an effect")]
+        public IDictionary<EffectType, int> coinflip_effects { get; set; } = new Dictionary<EffectType, int>() // NEGATIVE EFFECT CHANCES
+        {
+            [EffectType.DamageReduction] = 1,
+            [EffectType.Bleeding] = 5,
+            [EffectType.Blinded] = 5,
+            [EffectType.Deafened] = 5,
+            [EffectType.MovementBoost] = 3,
+            [EffectType.Vitality] = 2,
+            [EffectType.Invigorated] = 2,
+            [EffectType.Invisible] = 1,
+            [EffectType.SeveredHands] = 0,
+            [EffectType.RainbowTaste] = 2,
+            [EffectType.SinkHole] = 4,
+            [EffectType.Scp1853] = 3,
+            [EffectType.Stained] = 4,
+            [EffectType.Poisoned] = 3,
+            [EffectType.Hemorrhage] = 1,
+            [EffectType.Disabled] = 2,
+            [EffectType.Concussed] = 4,
+            [EffectType.CardiacArrest] = 0,
+            [EffectType.Burned] = 0,
+            [EffectType.Asphyxiated] = 2,
+            [EffectType.AmnesiaVision] = 2,
+            [EffectType.Flashed] = 2,
+            [EffectType.Exhausted] = 6,
+            [EffectType.InsufficientLighting] = 5,
+            [EffectType.Ensnared] = 3,
+        };
+
+        ////////////////////////////////////////////
+        
+
+    }
 }
