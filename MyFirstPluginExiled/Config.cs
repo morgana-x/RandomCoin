@@ -35,6 +35,9 @@ namespace CoinFlip
         public float coinflip_effect_time { get; set; } = 120.0f;
 
         /// ////////////////////////////////////
+        [Description("Decide whether it's an effect or item by checking if it's heads or tails instead, will make item chance and effect chance redundant")]
+        public bool coinflip_headstails { get; set; } = true;
+
         [Description("Chance of coinflip giving an item")]
         public int coinflip_item_chance { get; set; } = 50; // ITEM CHANCE
 
