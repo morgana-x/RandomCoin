@@ -95,7 +95,6 @@ namespace CoinFlip.Handlers
                 Log.Info(ev.Player.Nickname + " has no coin, returning....");
                 return;
             }
-            string prefix = CoinFlip.Instance.Config.coinflip_prefix;
             IDictionary<ItemType, int> coinflip_items = CoinFlip.Instance.Config.coinflip_items;
             IDictionary<EffectType, int> coinflip_effects= CoinFlip.Instance.Config.coinflip_effects;
 
@@ -108,12 +107,15 @@ namespace CoinFlip.Handlers
             bool coinflip_headstails = CoinFlip.Instance.Config.coinflip_headstails;
             bool coinflip_notify = CoinFlip.Instance.Config.coinflip_notifyplayer;
 
-            Log.Info(prefix + ev.Player.Nickname + " flipped a coin!");
+
+
+
+            Log.Info(ev.Player.Nickname + " flipped a coin!");
             int random = rnd.Next(0, 100);
-            Log.Info(prefix + ev.Player.Nickname + " luck: " + random.ToString() );
+            Log.Info(ev.Player.Nickname + " luck: " + random.ToString() );
             if (coinflip_destroycoinonuse)
             {
-                Log.Info(prefix +  "Destroyed " + ev.Player.Nickname + "'s coin.");
+                Log.Info(  "Destroyed " + ev.Player.Nickname + "'s coin.");
                 ev.Player.RemoveHeldItem(true);
             }
             int choose = 0;
@@ -147,22 +149,24 @@ namespace CoinFlip.Handlers
              
                     EffectType effect = GetRandomEffect(coinflip_effects);
                     string effectName = effect.ToString();
-                    Log.Info(prefix + ev.Player.Nickname + " got a random effect! Effect: " + effectName + " Duration: " + coinflip_effect_time.ToString());
+                    string coinflip_effectmessage = CoinFlip.Instance.Config.coinflip_effectmesssage.Replace("{effectName}", effectName).Replace("{time}", coinflip_effect_time.ToString())  ;
+                    Log.Info( ev.Player.Nickname + " got a random effect! Effect: " + effectName + " Duration: " + coinflip_effect_time.ToString());
                     ev.Player.EnableEffect(effect, coinflip_effect_time);
                     if (coinflip_notify)
                     {
-                        ev.Player.Broadcast(6, "Given " + effectName + " effect for " + coinflip_effect_time.ToString() + " seconds!", Broadcast.BroadcastFlags.Normal, true);
+                        ev.Player.Broadcast(6, coinflip_effectmessage, Broadcast.BroadcastFlags.Normal, true);
                     }
                     break;
                 case 1: // items
        
                     ItemType item = GetRandomItem(coinflip_items);
                     string itemName = item.ToString();
-                    Log.Info(prefix + ev.Player.Nickname + " got a random item! Item: " + itemName);
+                    Log.Info( ev.Player.Nickname + " got a random item! Item: " + itemName);
                     ev.Player.AddItem(item);
+                    string coinflip_itemmessage = CoinFlip.Instance.Config.coinflip_itemmessage.Replace("{itemName}", itemName);
                     if (coinflip_notify)
                     {
-                        ev.Player.Broadcast(5, "You have been given " + itemName + "!", Broadcast.BroadcastFlags.Normal, true);
+                        ev.Player.Broadcast(5, coinflip_itemmessage, Broadcast.BroadcastFlags.Normal, true);
                     }
                     break;
             }
