@@ -17,10 +17,13 @@ namespace CoinFlip
 
 
         ////////////// COIN FLIP CONFIG////////////////////////////////
-        
-        /// LOGS
-        [Description("Prefix of coinflip logs")]
-        public string coinflip_prefix { get; set; } = "[Random Coin] ";
+
+        [Description("Message that shows to player when they get an item")]
+        public string coinflip_itemmessage { get; set; } = "You have been given {itemName}!";
+
+        [Description("Message that shows to player when they get an effect")]
+        public string coinflip_effectmesssage { get; set; } = "Given {effectName} effect for {time} seconds!";
+
 
         // MAIN
 
@@ -38,11 +41,11 @@ namespace CoinFlip
         [Description("Decide whether it's an effect or item by checking if it's heads or tails instead, will make item chance and effect chance redundant")]
         public bool coinflip_headstails { get; set; } = true;
 
-        [Description("Chance of coinflip giving an item")]
+        [Description("Chance of coinflip giving an item (IGNORE IF HEADSTAILS IS SET TO TRUE)")]
         public int coinflip_item_chance { get; set; } = 50; // ITEM CHANCE
 
 
-        [Description("Chance of coinflip giving an effect")]
+        [Description("Chance of coinflip giving an effect (IGNORE IF HEADSTAILS IS SET TO TRUE)")]
         public int coinflip_effect_chance { get; set; } = 50; // EFFECT CHANCE
         /// ////////////////////////////////////
         /// 
@@ -54,14 +57,14 @@ namespace CoinFlip
     
             // GUNS
             [ItemType.GunAK] = 3,
-            [ItemType.GunCOM15] = 8,
-            [ItemType.GunCOM18] = 9,
-            [ItemType.GunCrossvec] = 5,
-            [ItemType.GunFSP9] = 6,
-            [ItemType.GunLogicer] = 4,
-            [ItemType.GunRevolver] = 4,
-            [ItemType.GunShotgun] = 4,
-            [ItemType.GunE11SR] = 4,
+            [ItemType.GunCOM15] = 4,
+            [ItemType.GunCOM18] = 4,
+            [ItemType.GunCrossvec] = 3,
+            [ItemType.GunFSP9] = 4,
+            [ItemType.GunLogicer] = 3,
+            [ItemType.GunRevolver] = 5,
+            [ItemType.GunShotgun] = 2,
+            [ItemType.GunE11SR] = 3,
             
             // GRENADES
             [ItemType.GrenadeFlash] = 5,
@@ -69,42 +72,48 @@ namespace CoinFlip
 
             // Misc
             [ItemType.Coin] = 0,
-            [ItemType.Jailbird] = 3,
-            [ItemType.ParticleDisruptor] = 0,
-            [ItemType.MicroHID] = 2,
-            [ItemType.Radio] = 10,
-            [ItemType.Flashlight] = 10,
-            [ItemType.GunCom45] = 0,
+            [ItemType.Jailbird] = 2,
+            [ItemType.ParticleDisruptor] = 2,
+            [ItemType.MicroHID] = 1,
+            [ItemType.Radio] = 5,
+            [ItemType.Flashlight] = 6,
+            [ItemType.GunCom45] = 1,
 
             // Medical
-            [ItemType.Painkillers] = 10,
-            [ItemType.Medkit] = 8,
-            [ItemType.SCP500] = 0,
+            [ItemType.Painkillers] = 6,
+            [ItemType.Medkit] = 5,
+            [ItemType.SCP500] = 1,
+            [ItemType.Adrenaline] = 4,
 
             //  SCP
-            [ItemType.SCP207] = 1,
-            [ItemType.SCP018] = 0,
-            [ItemType.SCP2176] = 0,
-
+            [ItemType.SCP207] = 2,
+            [ItemType.SCP018] = 1,
+            [ItemType.SCP2176] = 1,
+            [ItemType.SCP330] = 1,
+            [ItemType.SCP1853] = 1,
+            [ItemType.SCP018] = 1,
+            [ItemType.SCP268] =2,
+            [ItemType.SCP244a] = 1,
+            [ItemType.SCP244b] = 1,
             // Armor
 
-            [ItemType.ArmorCombat] = 10,
-            [ItemType.ArmorHeavy] = 5,
-            [ItemType.ArmorLight] = 14,
+            [ItemType.ArmorCombat] = 4,
+            [ItemType.ArmorHeavy] = 3,
+            [ItemType.ArmorLight] = 6,
 
             // KEYCARDS
-            [ItemType.KeycardO5] = 2,
-            [ItemType.KeycardChaosInsurgency] = 3,
-            [ItemType.KeycardResearchCoordinator] = 5,
-            [ItemType.KeycardNTFCommander] = 3,
-            [ItemType.KeycardNTFLieutenant] = 4,
+            [ItemType.KeycardO5] = 1,
+            [ItemType.KeycardChaosInsurgency] = 2,
+            [ItemType.KeycardResearchCoordinator] = 4,
+            [ItemType.KeycardNTFCommander] = 2,
+            [ItemType.KeycardNTFLieutenant] = 3,
             [ItemType.KeycardNTFOfficer] = 4,
-            [ItemType.KeycardFacilityManager] = 5,
-            [ItemType.KeycardResearchCoordinator] = 6,
-            [ItemType.KeycardZoneManager] = 6,
-            [ItemType.KeycardGuard] = 10,
-            [ItemType.KeycardScientist] = 12,
-            [ItemType.KeycardJanitor] = 13,
+            [ItemType.KeycardFacilityManager] = 4,
+            [ItemType.KeycardResearchCoordinator] = 4,
+            [ItemType.KeycardZoneManager] = 4,
+            [ItemType.KeycardGuard] = 5,
+            [ItemType.KeycardScientist] = 5,
+            [ItemType.KeycardJanitor] = 6,
 
         };
         ////////////////////////////////////////
@@ -126,7 +135,7 @@ namespace CoinFlip
             [EffectType.Vitality] = 2,
             [EffectType.Invigorated] = 2,
             [EffectType.Invisible] = 1,
-            [EffectType.SeveredHands] = 0,
+            [EffectType.SeveredHands] = 1,
             [EffectType.RainbowTaste] = 2,
             [EffectType.SinkHole] = 4,
             [EffectType.Scp1853] = 3,
@@ -136,16 +145,18 @@ namespace CoinFlip
             [EffectType.Disabled] = 2,
             [EffectType.Concussed] = 4,
             [EffectType.CardiacArrest] = 0,
-            [EffectType.Burned] = 0,
+            [EffectType.Burned] = 1,
             [EffectType.Asphyxiated] = 2,
             [EffectType.AmnesiaVision] = 2,
             [EffectType.Flashed] = 2,
             [EffectType.Exhausted] = 6,
             [EffectType.InsufficientLighting] = 5,
             [EffectType.Ensnared] = 3,
+            [EffectType.Scp207] = 3,
         };
 
         ////////////////////////////////////////////
+        
         
 
     }
