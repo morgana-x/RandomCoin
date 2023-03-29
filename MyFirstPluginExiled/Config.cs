@@ -147,7 +147,7 @@ namespace CoinFlip
             [EffectType.CardiacArrest] = 0,
             [EffectType.Burned] = 1,
             [EffectType.Asphyxiated] = 2,
-            [EffectType.AmnesiaVision] = 2,
+            //[EffectType.AmnesiaVision] = 2,
             [EffectType.Flashed] = 2,
             [EffectType.Exhausted] = 6,
             [EffectType.InsufficientLighting] = 5,
